@@ -7,11 +7,6 @@ const PORT = 1337;
 
 app.use(express.static('public'))
 
-
-app.listen(PORT, () => {
-  console.log(`App listening in port ${PORT}`);
-});
-
 app.use(morgan('dev'))
 
 app.get("/", (req, res) => {
@@ -47,7 +42,12 @@ app.get("/", (req, res) => {
 app.get('/posts/:id', (req, res) => {
   const id = req.params.id;
   const post = postBank.find(id)
-  res.send(`<!DOCTYPE html>
+
+  if (!post.id) {
+    throw new Error('Post not found')
+  }
+  else {
+    res.send(`<!DOCTYPE html>
   <html>
   <head>
     <title>Wizard News</title>
@@ -66,4 +66,16 @@ app.get('/posts/:id', (req, res) => {
     </div>
   </body>
 </html>`)
+  }
+});
+
+app.use(idErrorHandler)
+
+function idErrorHandler (err, req, res, next) {
+    console.error(err.stack)
+    res.status(404).send('Post not found')
+}
+
+app.listen(PORT, () => {
+  console.log(`App listening in port ${PORT}`);
 });
