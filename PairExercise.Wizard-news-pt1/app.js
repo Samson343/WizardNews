@@ -28,9 +28,8 @@ app.get("/", (req, res) => {
       ${posts.map(post => `
         <div class='news-item'>
           <p>
-          <a href="/posts/${post.id}">${post.title}</a>
             <span class="news-position">${post.id}. ▲</span>
-            ${post.title}
+            <a href="/posts/${post.id}">${post.title}</a>
             <small>(by ${post.name})</small>
           </p>
           <small class="news-info">
@@ -47,7 +46,7 @@ app.get("/", (req, res) => {
 
 app.get('/posts/:id', (req, res) => {
   const id = req.params.id;
-  const posts = postBank.list()
+  const post = postBank.find(id)
   res.send(`<!DOCTYPE html>
   <html>
   <head>
@@ -57,19 +56,14 @@ app.get('/posts/:id', (req, res) => {
   <body>
     <div class="news-list">
       <header><img src="/logo.png"/>Wizard News</header>
-      ${posts.map(post => `
         <div class='news-item'>
-          <p>
-            <span class="news-position">${post.id}. ▲</span>
+            <p>${post.title} <small>(by ${post.name})</small></p>
+            <p>
             ${post.content}
-            <small>(by ${post.name})</small>
           </p>
-          <small class="news-info">
-            ${post.upvotes} upvotes | ${post.date}
-          </small>
-        </div>`
-      ).join('')}
+        </div>
+      
     </div>
   </body>
-</html>`);
+</html>`)
 });
