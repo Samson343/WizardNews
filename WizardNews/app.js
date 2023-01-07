@@ -3,7 +3,7 @@ const app = express();
 const morgan = require("morgan")
 const postBank = require("./postBank")
 
-const PORT = 1337;
+const { PORT = 1337 } = process.env;
 
 app.use(express.static('public'))
 
@@ -73,7 +73,7 @@ app.use(idErrorHandler)
 
 function idErrorHandler (err, req, res, next) {
     console.error(err.stack)
-    res.status(404).send('Post not found')
+    res.status(404).send('Error 404 - Post not found')
 }
 
 app.listen(PORT, () => {
